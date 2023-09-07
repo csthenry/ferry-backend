@@ -2,36 +2,46 @@ package tools
 
 import (
 	"encoding/json"
-	"fmt"
+	"ferry/pkg/logger"
 	"io/ioutil"
 	"net/http"
-
 	"github.com/spf13/viper"
 )
 
 func GetLocation(ip string) string {
-	var address = "已关闭位置获取"
+	var address = "--"
 	if viper.GetBool("settings.public.isLocation") {
 		if ip == "127.0.0.1" || ip == "localhost" {
-			return "内部IP"
+			return "本机地址"
 		}
-		resp, err := http.Get("https://restapi.amap.com/v3/ip?ip=" + ip + "&key=3fabc36c20379fbb9300c79b19d5d05e")
+		resp, err := http.Get("https://api.vvhan.com/api/getIpInfo?ip=" + ip)
 		if err != nil {
 			panic(err)
 		}
 		defer resp.Body.Close()
 		s, err := ioutil.ReadAll(resp.Body)
 
-		m := make(map[string]string)
+		var jsonObj map[string]interface{}
+		var mInfo map[string]string	//地址信息
+		err = json.Unmarshal(s, &jsonObj)
 
-		err = json.Unmarshal(s, &m)
 		if err != nil {
-			fmt.Println("Umarshal failed:", err)
+			logger.Error("Get AddressAPI Failed:", err)
 		}
-		if m["province"] == "" {
-			return "未知位置"
+
+		addressInfo, err := json.Marshal(jsonObj["info"])
+		if jsonObj["success"].(bool) && err == nil {
+			json.Unmarshal([]byte(string(addressInfo)), &mInfo)
 		}
-		address = m["province"] + "-" + m["city"]
+
+		if err != nil {
+			logger.Error("AddressJson Marshal Failed:", err)
+		}
+
+		if mInfo["prov"] == "" {
+			return "Unknown"
+		}
+		address = mInfo["prov"] + "-" + mInfo["city"]
 	}
 	return address
 }

@@ -73,7 +73,7 @@ func CreateTemplate(c *gin.Context) {
 		return
 	}
 
-	templateValue.Creator = tools.GetUserId(c) // 当前登陆用户ID
+	templateValue.Creator = tools.GetUserId(c) // 当前登录用户ID
 	err = orm.Eloquent.Create(&templateValue).Error
 	if err != nil {
 		app.Error(c, -1, err, "")

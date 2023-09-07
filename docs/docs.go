@@ -22,7 +22,7 @@ var doc = `{
         "contact": {},
         "license": {
             "name": "MIT",
-            "url": "https://github.com/lanyulei/ferry/blob/master/LICENSE"
+            "url": "https://github.com/csthenry/ferry-backend/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
@@ -2253,7 +2253,7 @@ var doc = `{
                 "consumes": [
                     "application/json"
                 ],
-                "summary": "登陆",
+                "summary": "登录",
                 "parameters": [
                     {
                         "description": "Add account",
@@ -3098,12 +3098,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "0.0.1",
+	Version:     "1.0.0",
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
 	Title:       "ferry API",
-	Description: "基于Gin + Vue + Element UI前后端分离的工单系统的接口文档\n添加qq群: 1127401830 进入技术交流群 请备注，谢谢！",
+	Description: "基于Gin + Vue + Element UI前后端分离的工单系统的接口文档",
 }
 
 type s struct{}

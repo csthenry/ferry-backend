@@ -48,7 +48,7 @@ func IdentityHandler(c *gin.Context) interface{} {
 	}
 }
 
-// @Summary 登陆
+// @Summary 登录
 // @Description 获取token
 // LoginHandler can be used by clients to get a jwt token.
 // Payload needs to be json in the form of {"username": "USERNAME", "password": "PASSWORD"}.
@@ -111,7 +111,7 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 
 	// ldap 验证
 	if loginVal.LoginType == 1 {
-		// ldap登陆
+		// ldap登录
 		ldapUserInfo, err = ldap1.LdapLogin(loginVal.Username, loginVal.Password)
 		if err != nil {
 			return nil, err
