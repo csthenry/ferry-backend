@@ -20,7 +20,7 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwtauth.GinJWTMiddleware) *gin
 	systemRouter.SysBaseRouter(g)
 
 	// 静态文件（前端服务）
-	// sysStaticFileRouter(g, r)
+	sysStaticFileRouter(g, r)
 
 	// swagger；注意：生产环境可以注释掉
 	// sysSwaggerRouter(g)
@@ -36,7 +36,7 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwtauth.GinJWTMiddleware) *gin
 
 func sysStaticFileRouter(r *gin.RouterGroup, g *gin.Engine) {
 	r.Static("/static", "./static")
-	g.LoadHTMLGlob("template/web/index.html")
+	// g.LoadHTMLGlob("template/web/index.html")
 }
 
 func sysSwaggerRouter(r *gin.RouterGroup) {
