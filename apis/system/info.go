@@ -47,7 +47,7 @@ func GetInfo(c *gin.Context) {
 
 	mp["introduction"] = " am a super administrator"
 
-	mp["avatar"] = "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+	mp["avatar"] = "/static/uploadfile/default.png"
 	if user.Avatar != "" {
 		mp["avatar"] = user.Avatar
 	}
