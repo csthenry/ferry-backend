@@ -5,6 +5,7 @@ import (
 	"errors"
 	"ferry/global/orm"
 	"ferry/models/process"
+	"ferry/models/system"
 	"ferry/tools"
 	"fmt"
 	"strconv"
@@ -19,6 +20,7 @@ import (
 type WorkOrderData struct {
 	process.WorkOrderInfo
 	CurrentState string `json:"current_state"`
+	CreatorName string `json:"creator_name"`
 }
 
 func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result map[string]interface{}, err error) {
@@ -31,6 +33,7 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 		workOrderTpls           []*process.TplData
 		workOrderHistory        []*process.CirculationHistory
 		stateList               []map[string]interface{}
+		userInfo      			system.SysUser
 	)
 
 	err = orm.Eloquent.Model(&processValue).Where("id = ?", processId).Find(&processValue).Error
@@ -167,6 +170,12 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 			}
 		}
 
+		// 查询创建人信息
+		err = orm.Eloquent.Model(&system.SysUser{}).Where("user_id = ?", workOrderInfo.Creator).Find(&userInfo).Error
+		workOrderInfo.CreatorName = userInfo.NickName
+		if err != nil {
+			return nil, err
+		}
 		result["workOrder"] = workOrderInfo
 
 		// 查询工单表单数据
