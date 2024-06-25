@@ -17,10 +17,21 @@ import (
   @Author : lanyulei
 */
 
+type CreatorInfo struct {
+	Name       string `json:"name"`
+	Sex        string `json:"sex"`
+	Mail       string `json:"mail"`
+	Phone      string `json:"phone"`
+	Avatar     string `json:"avatar"`
+	Role       string `json:"role"`
+	Department string `json:"department"`
+	Position   string `json:"position"`
+}
+
 type WorkOrderData struct {
 	process.WorkOrderInfo
-	CurrentState string `json:"current_state"`
-	CreatorName string `json:"creator_name"`
+	CurrentState string      `json:"current_state"`
+	CreatorInfo  CreatorInfo `json:"creator_info"`
 }
 
 func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result map[string]interface{}, err error) {
@@ -33,7 +44,10 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 		workOrderTpls           []*process.TplData
 		workOrderHistory        []*process.CirculationHistory
 		stateList               []map[string]interface{}
-		userInfo      			system.SysUser
+		userInfo                system.SysUser
+		roleInfo                system.SysRole
+		deptInfo                system.Dept
+		postInfo                system.Post
 	)
 
 	err = orm.Eloquent.Model(&processValue).Where("id = ?", processId).Find(&processValue).Error
@@ -171,11 +185,30 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 		}
 
 		// 查询创建人信息
-		err = orm.Eloquent.Model(&system.SysUser{}).Where("user_id = ?", workOrderInfo.Creator).Find(&userInfo).Error
-		workOrderInfo.CreatorName = userInfo.NickName
+		err = orm.Eloquent.Model(&userInfo).Where("user_id = ?", workOrderInfo.Creator).Find(&userInfo).Error
 		if err != nil {
-			return nil, err
+			return
 		}
+		err = orm.Eloquent.Model(&deptInfo).Where("dept_id = ?", userInfo.DeptId).Find(&deptInfo).Error
+		if err != nil {
+			return
+		}
+		err = orm.Eloquent.Model(&postInfo).Where("post_id = ?", userInfo.PostId).Find(&postInfo).Error
+		if err != nil {
+			return
+		}
+		err = orm.Eloquent.Model(&roleInfo).Where("role_id = ?", userInfo.RoleId).Find(&roleInfo).Error
+		if err != nil {
+			return
+		}
+		workOrderInfo.CreatorInfo.Name = userInfo.NickName
+		workOrderInfo.CreatorInfo.Sex = userInfo.Sex
+		workOrderInfo.CreatorInfo.Mail = userInfo.Email
+		workOrderInfo.CreatorInfo.Phone = userInfo.Phone
+		workOrderInfo.CreatorInfo.Avatar = userInfo.Avatar
+		workOrderInfo.CreatorInfo.Role = roleInfo.RoleName
+		workOrderInfo.CreatorInfo.Department = deptInfo.DeptName
+		workOrderInfo.CreatorInfo.Position = postInfo.PostName
 		result["workOrder"] = workOrderInfo
 
 		// 查询工单表单数据
