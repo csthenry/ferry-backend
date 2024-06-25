@@ -1,4 +1,4 @@
-FROM golang:1.18 AS build
+FROM golang:1.20 AS build
 
 WORKDIR /opt/workflow/ferry
 COPY . .
@@ -20,7 +20,7 @@ RUN apk add python3
 RUN apk add py3-pip
 RUN pip3 install requests pymysql
 
-#获取golang:1.18中编译的go二进制文件
+#获取golang:1.20中编译的go二进制文件
 COPY --from=build /opt/workflow/ferry/ferry /opt/workflow/ferry/
 
 COPY config/ /opt/workflow/ferry/default_config/
