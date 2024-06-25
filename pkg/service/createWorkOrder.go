@@ -46,6 +46,7 @@ func CreateWorkOrder(c *gin.Context) (err error) {
 			Id       int           `json:"id"`
 			Title    string        `json:"title"`
 			Priority int           `json:"priority"`
+			Creator  int           `json:"creator"`
 			FormData []interface{} `json:"form_data"`
 		}
 	)
@@ -359,6 +360,7 @@ func CreateWorkOrder(c *gin.Context) (err error) {
 			paramsValue.Id = workOrderInfo.Id
 			paramsValue.Title = workOrderInfo.Title
 			paramsValue.Priority = workOrderInfo.Priority
+			paramsValue.Creator = workOrderInfo.Creator
 			paramsValue.FormData = workOrderValue.Tpls["form_data"]
 			var params []byte
 			params, err = json.Marshal(paramsValue)

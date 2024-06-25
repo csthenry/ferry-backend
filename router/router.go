@@ -23,7 +23,7 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwtauth.GinJWTMiddleware) *gin
 	sysStaticFileRouter(g, r)
 
 	// swagger；注意：生产环境可以注释掉
-	// sysSwaggerRouter(g)
+	//sysSwaggerRouter(g)
 
 	// 无需认证
 	systemRouter.SysNoCheckRoleRouter(g)
@@ -50,7 +50,7 @@ func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwtauth.GinJWTMi
 
 	v1 := r.Group("/api/v1")
 
-	// 兼容前后端不分离的情
+	// 兼容前后端不分离的情况
 	r.GET("/", tpl.Tpl)
 
 	// 首页

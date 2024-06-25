@@ -433,6 +433,7 @@ func (h *Handle) HandleWorkOrder(
 			Id       int           `json:"id"`
 			Title    string        `json:"title"`
 			Priority int           `json:"priority"`
+			Creator  int           `json:"creator"`
 			FormData []interface{} `json:"form_data"`
 		}
 	)
@@ -929,6 +930,7 @@ func (h *Handle) HandleWorkOrder(
 		paramsValue.Id = h.workOrderDetails.Id
 		paramsValue.Title = h.workOrderDetails.Title
 		paramsValue.Priority = h.workOrderDetails.Priority
+		paramsValue.Creator = h.workOrderDetails.Creator
 		params, err := json.Marshal(paramsValue)
 		if err != nil {
 			return err

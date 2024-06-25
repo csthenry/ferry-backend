@@ -48,7 +48,7 @@ func IdentityHandler(c *gin.Context) interface{} {
 	}
 }
 
-// @Summary 登录
+// Authenticator @Summary 登录
 // @Description 获取token
 // LoginHandler can be used by clients to get a jwt token.
 // Payload needs to be json in the form of {"username": "USERNAME", "password": "PASSWORD"}.
@@ -167,7 +167,7 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 	return nil, jwt.ErrFailedAuthentication
 }
 
-// @Summary 退出登录
+// LogOut @Summary 退出登录
 // @Description 获取token
 // LoginHandler can be used by clients to get a jwt token.
 // Reply will be of the form {"token": "TOKEN"}.

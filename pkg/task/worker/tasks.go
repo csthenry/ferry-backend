@@ -15,8 +15,17 @@ var asyncTaskMap map[string]interface{}
 func executeTaskBase(envPath string, scriptPath string, params string) (err error) {
 	command := exec.Command(envPath, scriptPath, params) //初始化Cmd
 	out, err := command.CombinedOutput()
+	logger.Info("envPath: ", envPath)
+	// 解决 Windows 下 python3 可能不可用的问题
+	if err != nil && envPath == "python3" {
+		logger.Info("Python3 -> Python")
+		envPath = "python"
+		command = exec.Command(envPath, scriptPath, params)
+		out, err = command.CombinedOutput()
+	}
 	if err != nil {
-		logger.Errorf("task exec failed，%v", err.Error())
+		logger.Info("Output: ", string(out))
+		logger.Errorf("Task exec failed: %v", err.Error())
 		return
 	}
 	logger.Info("Output: ", string(out))

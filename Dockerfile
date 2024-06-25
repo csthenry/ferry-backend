@@ -18,7 +18,7 @@ WORKDIR /opt/workflow/ferry
 
 RUN apk add python3
 RUN apk add py3-pip
-RUN pip3 install requests
+RUN pip3 install requests pymysql
 
 #获取golang:1.18中编译的go二进制文件
 COPY --from=build /opt/workflow/ferry/ferry /opt/workflow/ferry/
