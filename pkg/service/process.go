@@ -8,9 +8,9 @@ import (
 	"ferry/models/system"
 	"ferry/tools"
 	"fmt"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
+	"strconv"
+	"strings"
 )
 
 /*
@@ -18,14 +18,15 @@ import (
 */
 
 type CreatorInfo struct {
-	Name       string `json:"name"`
-	Sex        string `json:"sex"`
-	Mail       string `json:"mail"`
-	Phone      string `json:"phone"`
-	Avatar     string `json:"avatar"`
-	Role       string `json:"role"`
-	Department string `json:"department"`
-	Position   string `json:"position"`
+	Name             string `json:"name"`
+	Sex              string `json:"sex"`
+	Mail             string `json:"mail"`
+	Phone            string `json:"phone"`
+	Avatar           string `json:"avatar"`
+	Role             string `json:"role"`
+	Department       string `json:"department"`
+	DepartmentSimple string `json:"dept_simple"`
+	Position         string `json:"position"`
 }
 
 type WorkOrderData struct {
@@ -207,8 +208,25 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 		workOrderInfo.CreatorInfo.Phone = userInfo.Phone
 		workOrderInfo.CreatorInfo.Avatar = userInfo.Avatar
 		workOrderInfo.CreatorInfo.Role = roleInfo.RoleName
-		workOrderInfo.CreatorInfo.Department = deptInfo.DeptName
+		workOrderInfo.CreatorInfo.DepartmentSimple = deptInfo.DeptName
 		workOrderInfo.CreatorInfo.Position = postInfo.PostName
+
+		// 获取创建人部门完整路径信息
+		var deptPath = strings.Split(string(deptInfo.DeptPath[1:]), "/")
+		deptPath = deptPath[1:] // 去除根节点
+		for i := 0; i < len(deptPath); i++ {
+			var tmpDeptInfo system.Dept
+			err = orm.Eloquent.Model(&tmpDeptInfo).Where("dept_id = ?", deptPath[i]).Find(&tmpDeptInfo).Error
+			if err != nil {
+				return
+			}
+			if len(workOrderInfo.CreatorInfo.Department) == 0 {
+				workOrderInfo.CreatorInfo.Department = tmpDeptInfo.DeptName
+			} else {
+				workOrderInfo.CreatorInfo.Department += " / " + tmpDeptInfo.DeptName
+			}
+		}
+
 		result["workOrder"] = workOrderInfo
 
 		// 查询工单表单数据
