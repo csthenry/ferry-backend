@@ -18,7 +18,8 @@ import (
 */
 
 type CreatorInfo struct {
-	Name             string `json:"name"`
+	UserName         string `json:"username"`
+	NickName         string `json:"nickname"`
 	Sex              string `json:"sex"`
 	Mail             string `json:"mail"`
 	Phone            string `json:"phone"`
@@ -202,7 +203,8 @@ func ProcessStructure(c *gin.Context, processId int, workOrderId int) (result ma
 		if err != nil {
 			return
 		}
-		workOrderInfo.CreatorInfo.Name = userInfo.NickName
+		workOrderInfo.CreatorInfo.UserName = userInfo.UserName.Username
+		workOrderInfo.CreatorInfo.NickName = userInfo.NickName
 		workOrderInfo.CreatorInfo.Sex = userInfo.Sex
 		workOrderInfo.CreatorInfo.Mail = userInfo.Email
 		workOrderInfo.CreatorInfo.Phone = userInfo.Phone
