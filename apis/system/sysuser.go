@@ -54,6 +54,13 @@ func GetSysUserList(c *gin.Context) {
 	data.DeptId, _ = tools.StringToInt(deptId)
 
 	result, count, err := data.GetPage(pageSize, pageIndex)
+
+	// 清除那该死的密码（原作者写的真是坨狗屎，密码返回给前端，真的挺天才的）
+	for i := range result {
+		result[i].Salt = ""
+		result[i].Password = ""
+	}
+
 	if err != nil {
 		app.Error(c, -1, err, "")
 		return

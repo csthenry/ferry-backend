@@ -32,7 +32,7 @@ type UserName struct {
 
 type PassWord struct {
 	// 密码
-	Password string `gorm:"type:varchar(128)" json:"password"`
+	Password string `gorm:"type:varchar(128)" json:"password,omitempty"`
 }
 
 type LoginM struct {
@@ -45,18 +45,18 @@ type SysUserId struct {
 }
 
 type SysUserB struct {
-	NickName string `gorm:"type:varchar(128)" json:"nickName"` // 昵称
-	Phone    string `gorm:"type:varchar(11)" json:"phone"`     // 手机号
-	RoleId   int    `gorm:"type:int(11)" json:"roleId"`        // 角色编码
-	Salt     string `gorm:"type:varchar(255)" json:"salt"`     //盐
-	Avatar   string `gorm:"type:varchar(255)" json:"avatar"`   //头像
-	Sex      string `gorm:"type:varchar(255)" json:"sex"`      //性别
-	Email    string `gorm:"type:varchar(128)" json:"email"`    //邮箱
-	DeptId   int    `gorm:"type:int(11)" json:"deptId"`        //部门编码
-	PostId   int    `gorm:"type:int(11)" json:"postId"`        //职位编码
-	CreateBy string `gorm:"type:varchar(128)" json:"createBy"` //
-	UpdateBy string `gorm:"type:varchar(128)" json:"updateBy"` //
-	Remark   string `gorm:"type:varchar(255)" json:"remark"`   //备注
+	NickName string `gorm:"type:varchar(128)" json:"nickName"`       // 昵称
+	Phone    string `gorm:"type:varchar(11)" json:"phone"`           // 手机号
+	RoleId   int    `gorm:"type:int(11)" json:"roleId"`              // 角色编码
+	Salt     string `gorm:"type:varchar(255)" json:"salt,omitempty"` //盐
+	Avatar   string `gorm:"type:varchar(255)" json:"avatar"`         //头像
+	Sex      string `gorm:"type:varchar(255)" json:"sex"`            //性别
+	Email    string `gorm:"type:varchar(128)" json:"email"`          //邮箱
+	DeptId   int    `gorm:"type:int(11)" json:"deptId"`              //部门编码
+	PostId   int    `gorm:"type:int(11)" json:"postId"`              //职位编码
+	CreateBy string `gorm:"type:varchar(128)" json:"createBy"`       //
+	UpdateBy string `gorm:"type:varchar(128)" json:"updateBy"`       //
+	Remark   string `gorm:"type:varchar(255)" json:"remark"`         //备注
 	Status   string `gorm:"type:int(1);" json:"status"`
 	Params   string `gorm:"-" json:"params"`
 	BaseModel
@@ -232,7 +232,7 @@ func (e *SysUser) GetPage(pageSize int, pageIndex int) ([]SysUserPage, int, erro
 	return doc, count, nil
 }
 
-//加密
+// 加密
 func (e *SysUser) Encrypt() (err error) {
 	if e.Password == "" {
 		return
@@ -247,7 +247,7 @@ func (e *SysUser) Encrypt() (err error) {
 	}
 }
 
-//添加
+// 添加
 func (e SysUser) Insert() (id int, err error) {
 	if err = e.Encrypt(); err != nil {
 		return
@@ -269,7 +269,7 @@ func (e SysUser) Insert() (id int, err error) {
 	return
 }
 
-//修改
+// 修改
 func (e *SysUser) Update(id int) (update SysUser, err error) {
 	if e.Password != "" {
 		if err = e.Encrypt(); err != nil {
